@@ -18,6 +18,9 @@ class IOTools():
     def write_csv(self, file_name, df, sep, index=False):
         df.to_csv(file_name, sep=sep, index=index)
 
+    def read_csv(self, file_name, sep=',', header=True):
+        return pd.read_csv(file_name, sep=sep, header=header)
+        
 if __name__ == '__main__':
     import sys
     io = IOTools()
