@@ -20,6 +20,16 @@ class IOTools():
 
     def read_csv(self, file_name, sep=',', header=True):
         return pd.read_csv(file_name, sep=sep, header=header)
+
+    def read_file_profission_list(self, file_name, encoding='latin-1'):
+        profission_list = []
+        with open(file_name, 'r', encoding=encoding) as f:
+            lines = f.readlines()
+            for line in lines:
+                if len(line) > 2:
+                    profission_list.append(line.split(';')[1].lower())
+        return profission_list
+
         
 if __name__ == '__main__':
     import sys

@@ -30,8 +30,15 @@ extract = BashOperator(
                         dag=dag
 )
 
-model = BashOperator(
-                        task_id='model',
+tag_profission = BashOperator(
+                        task_id='tag_profission',
+                        bash_command='echo "teste"',
+                        dag=dag
+
+)
+
+tag_sentiment = BashOperator(
+                        task_id='tag_sentiment',
                         bash_command='echo "text"',
                         dag=dag
 )
@@ -42,5 +49,6 @@ load = BashOperator(
                         dag=dag
 )
 
-model.set_upstream(extract)
-load.set_upstream(model)
+tag_profission.set_upstream(extract)
+tag_sentiment.set_upstream(tag_profission)
+load.set_upstream(tag_sentiment)

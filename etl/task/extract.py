@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import pandas as pd
 
@@ -26,17 +27,20 @@ class Extract(TaskBase):
         return df
 
 
-
-    def main(self, input_file, output_file):
-        df = self.read_data(input_file)
-        df = self.clean_source(df)
-        df = self.clean_df(df)
+    def main(self, input_dir, output_dir):
+        for file in os.listdir(input_dir):
+            input_file = os.path.join(input_dir, file)
+            output_file = os.path.join(output_file, file)
+            df = self.read_data(input_file)
+            df = self.clean_source(df)
+            df = self.clean_df(df)
+            self.write_csv(output_file, sep=',')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Extract information of Tweets')
-    parser.add_argument('--input', '-i', required=True)
-    parser.add_argument('--output', '-o', required=True)
+    parser.add_argument('--input_dir', '-i', required=True)
+    parser.add_argument('--output_dir', '-o', required=True)
     args = parser.parse_args()
     e = Extract()
-    e.main(args.input, args.output)
+    e.main(args.input_dir, args.output_dir)
