@@ -10,6 +10,7 @@ class IOTools():
         data = [json.loads(line) for line in lines]
         data = pd.DataFrame(data)
         user = data['user'].apply(pd.Series)
+        user.rename(columns={'created_at':'user_created'}, inplace=True)
         places = data['place'].apply(pd.Series)
         entity = data['entities'].apply(pd.Series)
         data.drop(['user', 'entities', 'place'], axis=1)
