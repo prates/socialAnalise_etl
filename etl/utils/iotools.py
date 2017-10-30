@@ -19,8 +19,8 @@ class IOTools():
     def write_csv(self, file_name, df, sep, index=False):
         df.to_csv(file_name, sep=sep, index=index)
 
-    def read_csv(self, file_name, sep=',', header=True):
-        return pd.read_csv(file_name, sep=sep, header=header)
+    def read_csv(self, file_name, sep=','):
+        return pd.read_csv(file_name, sep=sep)
 
     def read_file_profission_list(self, file_name, encoding='latin-1'):
         profission_list = []

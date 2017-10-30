@@ -21,34 +21,28 @@ default_args = {
     # 'end_date': datetime(2016, 1, 1),
 }
 
-dag = DAG('etl_social', default_args=default_args)
+dag = DAG('etl_social', default_args=default_args, schedule_interval=None)
 
 
 extract = BashOperator(
                         task_id='extract',
-                        bash_command='echo "teste"',
+                        bash_command='cd /home/prates/PycharmProjects/ETL_twiiter; export PYTHONPATH=.; python etl/task/extract.py -i ~/twitter_dados/input_twitter/ -o ~/twitter_dados/clean_tweets/',
                         dag=dag
-)
-
-tag_profission = BashOperator(
-                        task_id='tag_profission',
-                        bash_command='echo "teste"',
-                        dag=dag
-
 )
 
 tag_sentiment = BashOperator(
                         task_id='tag_sentiment',
-                        bash_command='echo "text"',
+                        bash_command='cd /home/prates/PycharmProjects/ETL_twiiter; export PYTHONPATH=.; python etl/task/tag_sentiments.py -i ~/twitter_dados/clean_tweets/ -o ~/twitter_dados/tag_sentiments/ -cl etl/data/class_nb.bin',
+                        dag=dag
+
+)
+
+
+indexes = BashOperator(
+                        task_id='indexer',
+                        bash_command='cd /home/prates/PycharmProjects/ETL_twiiter; export PYTHONPATH=.; python etl/task/indexer.py -i ~/twitter_dados/tag_sentiments/ -id tweets_01 -es search-tamoios-es-mwuewcbovzuktgu5lfy52spm7u.us-west-2.es.amazonaws.com',
                         dag=dag
 )
 
-load = BashOperator(
-                        task_id='load',
-                        bash_command='echo "text"',
-                        dag=dag
-)
-
-tag_profission.set_upstream(extract)
-tag_sentiment.set_upstream(tag_profission)
-load.set_upstream(tag_sentiment)
+tag_sentiment.set_upstream(extract)
+indexes.set_upstream(tag_sentiment)

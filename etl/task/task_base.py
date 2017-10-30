@@ -17,5 +17,5 @@ class TaskBase():
         self.io.write_csv(file_name=file_name, df=df, sep=sep)
 
 
-    def read_csv(self, file_name, sep=',', header=True):
-        return pd.read_csv(file_name, sep=sep, header=header)
+    def read_csv(self, file_name, sep=','):
+        return pd.read_csv(file_name, sep=sep)

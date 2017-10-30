@@ -1,0 +1,92 @@
+PUT /_template/tweets
+{
+  "template": "tweets_*",
+  "settings": {
+  "number_of_shards": 6
+  },
+  "mappings": {
+    "tweets": {
+      "properties": {
+        "ponto": {
+          "type": "geo_point"
+        },
+        "created_at": {
+          "type": "date"
+        },
+        "favorite_count": {
+          "type": "keyword"
+        },
+        "lang":{
+            "type": "keyword"
+        },
+        "quote_count":{
+            "type": "keyword"
+        },
+        "reply_count":{
+            "type": "keyword"
+        },
+        "retweet_count":{
+            "type": "keyword"
+        },
+        "retweeted":{
+            "type": "keyword"
+        },
+        "text":{
+            "type": "text"
+        },
+        "truncated":{
+            "type": "keyword"
+        },
+        "contributors_enabled":{
+            "type": "keyword"
+        },
+        "user_created":{
+            "type": "date"
+        },
+        "default_profile":{
+            "type": "keyword"
+        },
+        "description":{
+            "type": "keyword"
+        },
+        "favourites_count":{
+            "type": "keyword"
+        },
+        "followers_count":{
+            "type": "keyword"
+        },
+        "following":{
+            "type": "keyword"
+        },
+        "friends_count":{
+            "type": "keyword"
+        },
+        "listed_count":{
+            "type": "keyword"
+        },
+        "protected":{
+            "type": "keyword"
+        },
+        "statuses_count":{
+            "type": "keyword"
+        },
+        "verified":{
+            "type": "keyword"
+        },
+        "mentions":{
+            "type": "keyword"
+        },
+        "hash_tags":{
+            "type": "keyword"
+        },
+        "clean_source":{
+            "type": "keyword"
+        },
+        "sentiment":{
+            "type": "keyword"
+        }
+
+      }
+    }
+  }
+}

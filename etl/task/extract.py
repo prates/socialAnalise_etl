@@ -66,7 +66,7 @@ class Extract(TaskBase):
 
     def convert_date(self, df, fields):
         for i in fields:
-            df[i] = df[i].apply(lambda x: datetime.strptime(x, '%a %b %d %H:%M:%S %z %Y'))
+            df[i] = df[i].apply(lambda x: datetime.strptime(x, '%a %b %d %H:%M:%S %z %Y').strftime('%Y-%m-%d %H:%M:%S %z'))
         return df
 
     def get_hashtags(self, data):
@@ -81,23 +81,42 @@ class Extract(TaskBase):
         df['hash_tags'] = df['hashtags'].apply(self.get_hashtags)
         return df
 
+    def remove_hashtag(self, df):
+        wp = WordProcessor()
+        df['text'] = df['text'].apply(wp.remove_hash_tag)
+        return df
+
+    def remove_url(self, df):
+        wp = WordProcessor()
+        df['text'] = df['text'].apply(wp.remove_url)
+        return df
+
+    def clean_text(self, df):
+        df = self.remove_user_mentions(df)
+        df = self.remove_hashtag(df)
+        df = self.remove_url(df)
+        return df
+
+
     def main(self, input_dir, output_dir):
         for file in os.listdir(input_dir):
-            input_file = os.path.join(input_dir, file)
-            output_file = os.path.join(output_dir, file)
-            df = self.read_data(input_file)
-            df = self.filter_geo(df)
-            df = self.format_lat_lon(df)
-            df = self.remove_user_mentions(df)
-            df = self.process_mentions(df)
-            df = self.process_hashtags(df)
-            df = self.convert_date(df, ['created_at', 'user_created'])
-
-            df = self.clean_source(df)
-            df = self.clean_df(df)
-            #print(df.columns)
-            self.write_csv(output_file, df, sep=',')
-
+            try:
+                input_file = os.path.join(input_dir, file)
+                output_file = os.path.join(output_dir, file)
+                df = self.read_data(input_file)
+                df = self.filter_geo(df)
+                df = self.format_lat_lon(df)
+                df = self.process_mentions(df)
+                df = self.process_hashtags(df)
+                df = self.clean_text(df)
+                df = self.convert_date(df, ['created_at', 'user_created'])
+                df = self.clean_source(df)
+                df = self.clean_df(df)
+                #print(df.columns)
+                self.write_csv(output_file, df, sep=',')
+            except Exception as ex:
+                print("Erro ao processar o arquivo %s", file)
+                print(ex)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Extract information of Tweets')
