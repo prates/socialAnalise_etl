@@ -2,6 +2,8 @@ from datetime import datetime
 import os
 from argparse import ArgumentParser
 
+import json
+
 
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
@@ -39,7 +41,6 @@ class Indexer(TaskBase):
         row_list = []
         print(df.dtypes)
         for i in df.index:
-            print(i)
             row = df.iloc[i].to_dict()
 
             if not row['lat'] or not row['lon']:
@@ -51,13 +52,10 @@ class Indexer(TaskBase):
             except Exception as ex:
                 print(ex)
                 continue
-            k = ({
+            k = {
                 "_index": index,
                 "_type": "tweet",
-                'ponto': {
-                    'lat': lat,
-                    'lon': lon
-                },
+                "loc": '%s,%s' %(lat, lon),
                 "created_at": datetime.strptime(row["created_at"], '%Y-%m-%d %H:%M:%S %z'),
                 "favorite_count": self.convert_int(row["favorite_count"]),
                 "lang": row["lang"],
@@ -65,7 +63,7 @@ class Indexer(TaskBase):
                 "reply_count": self.convert_int(row["reply_count"]),
                 "retweet_count": self.convert_int(row["retweet_count"]),
                 "retweeted": self.convert_bool(row["retweeted"]),
-                "text": row["text"],
+                "text": row["text"].split(' '),
                 "truncated": self.convert_bool(row["truncated"]),
                 "contributors_enabled": self.convert_bool(row["contributors_enabled"]),
                 "user_created": datetime.strptime(row["user_created"], '%Y-%m-%d %H:%M:%S %z'),
@@ -84,7 +82,7 @@ class Indexer(TaskBase):
                 "clean_source": row["clean_source"],
                 "sentiment": row["sentiment"],
 
-            })
+            }
             row_list.append(k)
         try:
             helpers.bulk(es, (row_list))
