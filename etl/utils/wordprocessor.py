@@ -2,6 +2,7 @@ import re
 
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from nltk.stem.snowball import PortugueseStemmer
 
 class WordProcessor():
 
@@ -31,3 +32,9 @@ class WordProcessor():
     def valid_words(self, text):
         text = text.lower()
         return ' '.join(self.word.findall(text))
+
+    def sterm(self, text):
+        st = PortugueseStemmer()
+        return st.stem(text)
+
+    

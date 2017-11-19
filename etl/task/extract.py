@@ -104,7 +104,7 @@ class Extract(TaskBase):
                 input_file = os.path.join(input_dir, file)
                 output_file = os.path.join(output_dir, file)
                 df = self.read_data(input_file)
-                df = self.filter_geo(df)
+                #df = self.filter_geo(df)
                 df = self.format_lat_lon(df)
                 df = self.process_mentions(df)
                 df = self.process_hashtags(df)

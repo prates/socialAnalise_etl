@@ -1,15 +1,16 @@
 from datetime import datetime, timedelta
 
+import airflow
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
-
+import datetime as dt
 
 
 
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2017, 6, 1),
+    'start_date': dt.datetime(2017, 6, 1),
     'email': ['airflow@airflow.com'],
     'email_on_failure': False,
     'email_on_retry': False,
